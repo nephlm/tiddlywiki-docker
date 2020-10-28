@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  tw:
+    build: .
+    ports:
+      - "8080:8080"
+    env_file:
+      - s3.env
+    cap_add:
+      - SYS_ADMIN
+    devices:
+      - "/dev/fuse"
+    security_opt:
+      - "apparmor:unconfined"

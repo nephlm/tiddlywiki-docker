@@ -58,3 +58,25 @@ If you are in a memory-constrained environment, you can provide the
 
 Set the `DEBUG_LEVEL` environment variable to `debug`. For example by passing
 `-e DEBUG_LEVEL=debug` option in `docker run`.
+
+# S3FS
+
+## Policy
+
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": "s3:*",
+            "Resource": [
+                "arn:aws:s3:::<bucket>",
+                "arn:aws:s3:::<bucket>/*"
+            ]
+        }
+    ]
+}
+```
+Note the stared version of the bucket resource that is required to allow metadata access.

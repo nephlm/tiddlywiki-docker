@@ -1,20 +1,36 @@
-#!/bin/sh
+#!/bin/bash
 set -e
+
+source mount-bucket
 
 tiddlywiki_script=$(readlink -f $(which tiddlywiki))
 
-if [ -n "$NODE_MEM" ]; then
-    # Based on rule of thumb from:
-    # http://fiznool.com/blog/2016/10/01/running-a-node-dot-js-app-in-a-low-memory-environment/
-    mem_node_old_space=$((($NODE_MEM*4)/5))
-    NODEJS_V8_ARGS="--max_old_space_size=$mem_node_old_space $NODEJS_V8_ARGS"
-fi
+# if [ -n "$NODE_MEM" ]; then
+#     # Based on rule of thumb from:
+#     # http://fiznool.com/blog/2016/10/01/running-a-node-dot-js-app-in-a-low-memory-environment/
+#     mem_node_old_space=$((($NODE_MEM*4)/5))
+#     NODEJS_V8_ARGS="--max_old_space_size=$mem_node_old_space ${NODEJS_V8_ARGS:-}"
+# fi
 
-if [ ! -d /var/lib/tiddlywiki/mywiki ]; then
-  /usr/bin/env node $NODEJS_V8_ARGS $tiddlywiki_script mywiki --init server
+# if [ ! -d /var/lib/tiddlywiki/mywiki ]; then
 
-  mkdir /var/lib/tiddlywiki/mywiki/tiddlers
-fi
+#   I'm pretty sure the problem I was having with this code is that
+#   s3 doesn't have directories, it's a key/value store.
+#   Specifically it has no concept of an empty directory
+#   I don't know if s3fs is capable of testing if something is a directory or not.
+#   But beyond that, this code creates an empty mywiki directory and then
+#        An empty tiddlers directory.
+#   That likely doesn't play well with s3fs.
+
+#   I was able to get going by hand running the commands in a container shell.
+
+#   echo "initting wiki -"
+#   rm -rf mywiki/*
+#   /usr/bin/env node $NODEJS_V8_ARGS $tiddlywiki_script mywiki --init server
+
+#   echo "trying to create tiddlers dir"
+#   mkdir mywiki/tiddlers
+# fi
 
 
 # Start the tiddlywiki server
